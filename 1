@@ -1,0 +1,43 @@
+
+
+#include <Servo.h>
+#include <Keypad.h>
+
+const byte ROWS = 4; 
+const byte COLS = 4;   
+                   
+char MatrixKeyPad[ROWS][COLS] = {
+      {'1','2','3','4'},
+      {'5','6','7','8'},
+      {'9','A','B','C'},
+      {'D','E','F','G'}         };
+
+byte rowPins[ROWS] = {3, 4, 5, 6}; 
+byte colPins[COLS] = {7, 8, 9, 10};
+
+char pincode[6] = {'1' , '4' , '8' , '8' , 'C' , 'C'};
+int f = 0;
+int i = 0;
+
+Keypad customKeypad = Keypad(makeKeymap(MatrixKeyPad), colPins, rowPins, COLS, ROWS);
+Servo motor;
+
+void setup(){
+  motor.attach(2);
+  Serial.begin(9600);
+  pinMode(11 , OUTPUT);
+  pinMode(12 , OUTPUT);
+  digitalWrite(11 , HIGH);
+  digitalWrite(12 , LOW);
+}
+  
+void loop(){
+  char customKey = customKeypad.getKey(); 
+  if (customKey == pincode[i]){i += 1;f +=1;}
+  
+  if (f==6){motor.write(7000);i = 0;digitalWrite(11 , LOW);digitalWrite(12 , HIGH);}
+  }
+  
+  
+    
+ 
