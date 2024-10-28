@@ -1,0 +1,72 @@
+
+#include <Keypad.h>
+const byte ROWS = 4; 
+const byte COLS = 4;
+                   
+char MatrixKeyPad[ROWS][COLS] = {
+      {'1','2','3','4'},
+      {'5','6','7','8'},
+      {'9','A','B','C'},
+      {'D','E','F','G'}         };
+byte rowPins[ROWS] = {6, 7, 8, 9}; 
+byte colPins[COLS] = {2, 3, 4, 5};
+char pincode[6] = {'1' , '4' , '8' , '8' , 'C' , 'C'};
+int f = 0;
+int i = 0;
+int tm ;
+int op = 0;
+char val;
+Keypad customKeypad = Keypad(makeKeymap(MatrixKeyPad), colPins, rowPins, COLS, ROWS);
+
+
+void render( int num){
+
+  byte smbl;
+
+  if(num == 0){ smbl = 0b00000000;}
+   if ( num == 1){ smbl = 0b10000000;}
+   if ( num == 2){ smbl = 0b11000000;}
+   if ( num == 3){ smbl = 0b11100000;}
+   if ( num == 4){ smbl = 0b11110000;}
+   if ( num == 5){ smbl = 0b11111000;}
+   if ( num == 6){ smbl = 0b11111100;}
+   if ( num == 7){ smbl = 0b11111111;}
+   if ( num == 8){ smbl =  0b11111111;}
+   if ( num == 9) { smbl = 0b11111111;}
+   else{smbl == 0b00000000;}
+
+   digitalWrite(10 , LOW);
+   shiftOut(12  , 11  , LSBFIRST  , smbl);
+   digitalWrite(10 , HIGH);
+
+}
+
+void setup(){
+  Serial.begin(9600);
+  for(int i2 = 10 ; i2 <= 13 ; i2++){
+        pinMode(i2 , OUTPUT);
+      }
+  for(int i = 2 ; i <= 9 ; i++){
+        pinMode(i , INPUT);
+      }
+    //digitalWrite(10 , HIGH); 
+}
+  
+void loop(){
+  char customKey = customKeypad.getKey();
+  if (customKey == pincode[i]){i += 1;f +=1;}
+  //else{i=0 ; f=0;}
+  //if (customKey != pincode[i] && customKey != None ){i = 0;f = 0;}
+  render(f);
+  
+  if (f==6){
+  i = 0;
+  op += 1;
+  digitalWrite(13 , HIGH);
+  render(7);
+  delay(1);
+  if(op > 3000){render(0);digitalWrite(13 , LOW);i = 0 ; f = 0;op = 0;}
+  }
+  }
+
+  
